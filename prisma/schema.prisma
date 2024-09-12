@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model category {
+  id   Int    @unique @default(autoincrement())
+  uuid String @id @unique @default(cuid())
+  text String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum GENDER {
+  MALE
+  FEMALE
+  OTHERS
+}
+
+model otp {
+  id        Int      @unique @default(autoincrement())
+  uuid      String   @id @unique @default(cuid())
+  code      String
+  email     String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model answer {
+  uuid      String   @id @unique @default(cuid())
+  text      String
+  correct   Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  quiz      quiz?    @relation(fields: [quizId], references: [uuid], onDelete: Cascade)
+  quizId    String?
+}
+
+enum LEVEL {
+  EASY
+  MEDIUM
+  HARD
+  EXPERT
+}
+
+model quiz {
+  uuid        String   @id @unique @default(cuid())
+  by          user     @relation(fields: [userId], references: [uuid], onDelete: Cascade)
+  question    String
+  explanation String?
+  level       LEVEL    @default(EASY)
+  answer      answer[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String
+}
+
+model user {
+  uuid           String    @id @unique @default(cuid())
+  email          String    @unique
+  firstName      String
+  lastName       String
+  phone          String?
+  bio            String?
+  quizPlayed     Int       @default(0)
+  fastestTime    String    @default("")
+  correctAnswers Int       @default(0)
+  gender         GENDER?
+  type           USER_TYPE @default(USER)
+
+  avatar   file?     @relation(fields: [fileId], references: [uuid])
+  password password? @relation(fields: [key], references: [uuid])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  key    String?
+  fileId String?
+  quiz   quiz[]
+}
+
+enum USER_TYPE {
+  ADMIN
+  USER
+}
+
+enum PROVIDER {
+  CLOUDINARY
+  SELF_HOSTED
+}
+
+enum FILE_TYPE {
+  IMAGE
+  VIDEO
+  OTHERS
+  DOCUMENT
+}
+
+model file {
+  id   Int    @unique @default(autoincrement())
+  uuid String @id @unique @default(cuid())
+  src  String
+
+  type     FILE_TYPE @default(OTHERS)
+  provider PROVIDER  @default(SELF_HOSTED)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user user[]
+}
+
+model password {
+  id   Int    @unique @default(autoincrement())
+  uuid String @id @unique @default(cuid())
+
+  content String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user user[]
+}

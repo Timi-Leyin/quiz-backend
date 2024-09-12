@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>TCAG</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = { theme: { extend: { colors: { primary: '#FF6D2E', } } }
+      }
+    </script>
+    <style type="text/tailwindcss">
+      @layer utilities { .content-auto { content-visibility: auto; } }
+    </style>
+    <style type="text/css">
+      *{ margin:0; padding: 0; font-family: "Plus Jakarta Sans", sans-serif; }
+      button:disabled{
+        opacity: .7;
+      }
+    </style>
+  </head>
+
+  {{{body}}}
+
+</html>
